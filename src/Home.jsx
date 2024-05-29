@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useContext } from "react";
+import { ThemeData } from "./assets/ThemeContext";
 import ProductCard from "./ProductCard";
 import Shimmer from "./Shimmer";
 import NoProduct from "./NoProduct";
+import { Link } from "react-router-dom";
 
 let Home = () => {
   let [allData, setAllData] = useState([]);
@@ -53,14 +55,20 @@ let Home = () => {
     } else {
       setShowData(filteredData);
     }
+    setSearch("");
   };
 
   if (showData.length == 0) {
     return <Shimmer></Shimmer>;
   }
 
+  let {theme  } = useContext(ThemeData);
+
+  let lightTheme = "min-h-screen w-screen bg-gray-200 p-4";
+  let darkTheme = "min-h-screen w-screen bg-gray-500 text-black p-4"
+
   return (
-    <div className="min-h-screen w-screen bg-gray-300 p-4">
+    <div className={theme=="light"?lightTheme:darkTheme}>
       <div className="utility flex justify-around ">
         <button onClick={handleTopRating} className="btn  ">
           {" "}
@@ -72,13 +80,14 @@ let Home = () => {
         </button>
         <div className="searchBar flex justify-between">
           <input
+         
             type="text"
             placeholder="Type here"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
             }}
-            className="input input-bordered input-info w-full max-w-xs bg-white mx-2"
+            className="input input-bordered input-info w-full max-w-xs bg-white mx-2 text-black"
           />
           <button
             className="btn btn-outline btn-primary"
@@ -98,7 +107,7 @@ let Home = () => {
       <div className="AllCards flex flex-wrap justify-around">
         {showData.map((obj) => {
           return obj.id != "no" ? (
-            <ProductCard key={obj.id} obj={obj}></ProductCard>
+           <Link  key={obj.id} to={`/prodInfo/${obj.id}`}> <ProductCard obj={obj}></ProductCard></Link>
           ) : (
             <NoProduct></NoProduct>
           );

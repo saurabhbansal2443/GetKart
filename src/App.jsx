@@ -1,14 +1,17 @@
 import NavBar from "./Navbar";
-import Home from "./Home";
 
+import { Outlet } from "react-router-dom";
+import ThemeContext from "./assets/ThemeContext";
 
 const App = () => {
   return (
     <div>
-     <NavBar></NavBar>
-     <Home></Home>
+     <ThemeContext>
+      <NavBar></NavBar>
+      <Outlet></Outlet>
+      </ThemeContext>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
