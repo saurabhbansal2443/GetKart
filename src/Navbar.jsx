@@ -1,23 +1,26 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import {ThemeData} from "./assets/ThemeContext";
+import { ThemeData } from "./assets/ThemeContext";
+import { useSelector } from "react-redux";
 
 
 let NavBar = () => {
 
-   
-    let {theme , setTheme} = useContext(ThemeData);
-    
 
-    let handleThemeChange = ()=>{
-       setTheme(theme == "light" ? "dark" : "light");
-       console.log(theme)
-    }
-    let lightTheme ="navbar bg-primary text-primary-content";
-    let darkTheme = "navbar bg-base-300 text-primary-content text-white"
+  let { theme, setTheme } = useContext(ThemeData);
+
+  let cartItems = useSelector((state) => state.cart.items);
+  // console.log(cartItems);
+
+  let handleThemeChange = () => {
+    setTheme(theme == "light" ? "dark" : "light");
+    console.log(theme)
+  }
+  let lightTheme = "navbar bg-primary text-primary-content";
+  let darkTheme = "navbar bg-base-300 text-primary-content text-white"
   return (
     <>
-      <div className={theme=="light"?lightTheme:darkTheme}>
+      <div className={theme == "light" ? lightTheme : darkTheme}>
         <div className="flex-1">
           <Link to="/" className="btn btn-ghost text-2xl">
             GetKart
@@ -32,7 +35,7 @@ let NavBar = () => {
             >
               <div className="indicator">
                 <Link to="/cart">
-                  {" "}
+
                   <svg
                     width="40px"
                     xmlns="http://www.w3.org/2000/svg"
@@ -49,30 +52,15 @@ let NavBar = () => {
                     />
                   </svg>
                 </Link>
-                <span className="badge badge-sm indicator-item">8</span>
+                <span className="badge badge-sm indicator-item z-10">{cartItems.length}</span>
               </div>
             </div>
-            <div
-              tabIndex={0}
-              className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow"
-            >
-              <div className="card-body">
-                <span className="font-bold text-lg">8 Items</span>
-                <span className="text-info">Subtotal: $999</span>
-                <div className="card-actions">
-                  <button className="btn btn-primary btn-block">
-                    View cart
-                  </button>
-                </div>
-              </div>
-            </div>
+
           </div>
           <Link to="/about">
-            {" "}
             <p className="mx-4 text-2xl"> About </p>
           </Link>
           <Link to="/food">
-            {" "}
             <p className="mx-4 text-2xl"> Food </p>
             <p></p>
           </Link>
@@ -110,7 +98,7 @@ let NavBar = () => {
                 strokeLinejoin="round"
               >
 
-              
+
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
               </svg>
             </label>

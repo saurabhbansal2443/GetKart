@@ -3,23 +3,26 @@ import { ThemeData } from "./assets/ThemeContext";
 import ProductCard from "./ProductCard";
 import Shimmer from "./Shimmer";
 import NoProduct from "./NoProduct";
-import { Link } from "react-router-dom";
+import AddedProductInCart from "./AddedProductInCart";
+import { useSelector } from "react-redux";
+import useAllProductData from "./assets/useAllProductData";
 
 let Home = () => {
   let [allData, setAllData] = useState([]);
   let [showData, setShowData] = useState([]);
   let [search, setSearch] = useState("");
 
-  let getData = async () => {
-    let data = await fetch("https://dummyjson.com/products");
-    let obj = await data.json();
-    setAllData(obj.products);
-    setShowData(obj.products);
-  };
+  let cartDataId = useSelector((state)=>state.cart.id )
+  console.log(cartDataId)
 
-  useEffect(() => {
-    getData();
-  }, []);
+   let AddedComponent = AddedProductInCart(ProductCard) // Higher order compoenent 
+
+   let data = useAllProductData() // this is a custom hook 
+
+   useEffect(() => {
+      setAllData(data);
+      setShowData(data)
+  }, [data]);
 
   let handleTopRating = () => {
     let filteredData = showData.filter((obj) => {
@@ -107,7 +110,12 @@ let Home = () => {
       <div className="AllCards flex flex-wrap justify-around">
         {showData.map((obj) => {
           return obj.id != "no" ? (
-           <Link  key={obj.id} to={`/prodInfo/${obj.id}`}> <ProductCard obj={obj}></ProductCard></Link>
+
+            cartDataId.includes(obj.id) ? 
+              <AddedComponent key={obj.id} obj={obj} />
+             : 
+              <ProductCard key={obj.id} obj={obj} />
+            
           ) : (
             <NoProduct></NoProduct>
           );

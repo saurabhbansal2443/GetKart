@@ -1,21 +1,17 @@
-import React, { useEffect ,useState } from "react";
+import React, { useEffect ,useState ,useContext } from "react";
 // import obj from "./assets/SingleCard";
 import { useParams } from "react-router-dom";
+import { ThemeData } from "./assets/ThemeContext";
+import useGetProductInfo from "./assets/useGetProductInfo";
 
 const ProductInfo = () => {
-    const [obj , setObj ] = useState(null);
+    // const [obj , setObj ] = useState(null);
+
+    const {theme } = useContext(ThemeData);  
 
     let {id} = useParams();
 
-    let getData = async () => {
-        let data = await fetch(`https://dummyjson.com/products/${id}`);
-        let object = await data.json();
-        setObj(object)
-    }
-
-    useEffect(()=>{
-      getData()
-    },[])
+    let obj = useGetProductInfo(id); // this is a custom hook 
 
     if (obj == null){
         return <h1> ....loading </h1>
@@ -32,9 +28,12 @@ const ProductInfo = () => {
     brand,
     images,
   } = obj;
+
+  let lightTheme = "w-3/4 h-1/2 mt-9 card lg:card-side bg-white text-black border-2 border-red-500 shadow-xl";
+  let darkTheme = "w-3/4 h-1/2 mt-9 card lg:card-side bg-gray-700 shadow-xl";
   return (
     <div className="w-screen h-screen bg-white flex justify-center ">
-      <div className=" w-3/4 h-1/2 mt-9 card lg:card-side bg-gray-700 shadow-xl">
+      <div className={theme=="light"?lightTheme:darkTheme}>
         <figure className=" m-5  w-full">
           <img
             src={images[0]}
@@ -49,8 +48,8 @@ const ProductInfo = () => {
 
           <div className="badge bg-white text-black ">{rating}</div>
           <div className="badge  bg-white text-black">{category}</div>
-          {tags.map((ele) => {
-              return <div className="badge  bg-white text-black "> {ele}</div>;
+          {tags.map((ele ,idx) => {
+              return <div key={idx} className="badge  bg-white text-black "> {ele}</div>;
             })}
 
           <div className="badge bg-white text-black ">Stock : {stock}</div>
